@@ -21,10 +21,11 @@ const INITIAL_STATE: CounterState = {
 // const sumar = (a: number, b: number) => a + b;
 
 const counterReducer = (state: CounterState, action: CounterAction): CounterState => {
+  // console.log(state)
   switch (action.type) {
     case 'increaseBy':
       return {
-        counter: state.counter + 1,
+        counter: state.counter + action.payload.value,
         previous: state.counter,
         changes: state.changes + 1
       }
@@ -36,17 +37,33 @@ const counterReducer = (state: CounterState, action: CounterAction): CounterStat
 }
 
 export const CounterReducerComponent = () => {
-  const [{ counter }, dispatch] = useReducer(counterReducer, INITIAL_STATE)
+  const [counterState, dispatch] = useReducer(counterReducer, INITIAL_STATE)
 
-  const handleClick = () => {
-    dispatch({ type: 'increaseBy', payload: { value: 1 } })
+  const handleReset = () => {
+    dispatch({ type: 'reset' })
+  }
+
+  const handleIncreaseBy = (value: number) => {
+    dispatch({ type: 'increaseBy', payload: { value } })
   }
 
   return (
     <>
-      <h1>Counter Reducer: {counter}</h1>
-      <button onClick={handleClick}>
+      <h1>Counter Reducer: {counterState.counter}</h1>
+      <pre>
+        {JSON.stringify(counterState, null, 2)}
+      </pre>
+      <button onClick={handleReset}>
+        Reset
+      </button>
+      <button onClick={() => handleIncreaseBy(1)}>
         +1
+      </button>
+      <button onClick={() => handleIncreaseBy(5)}>
+        +5
+      </button>
+      <button onClick={() => handleIncreaseBy(10)}>
+        +10
       </button>
     </>
   )
